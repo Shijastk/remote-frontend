@@ -8,6 +8,25 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- DIAGNOSTIC LOGGER: Shows errors directly on TV if JS crashes -->
+    <div id="diagnostic-error" style="display:none; position:fixed; top:0; left:0; width:100%; padding:20px; background:red; color:white; font-family:monospace; z-index:999999; font-size:12px; overflow:auto; height:100vh;">
+        <h1 style="font-size:24px;">⚠️ APP CRASH</h1>
+        <pre id="error-log"></pre>
+    </div>
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var box = document.getElementById('diagnostic-error');
+            var log = document.getElementById('error-log');
+            box.style.display = 'block';
+            log.innerHTML += '\nERROR: ' + msg + '\nFILE: ' + url + '\nLINE: ' + line + ':' + col + '\n';
+        };
+        window.onunhandledrejection = function(event) {
+            var box = document.getElementById('diagnostic-error');
+            var log = document.getElementById('error-log');
+            box.style.display = 'block';
+            log.innerHTML += '\nASYNC ERROR: ' + event.reason + '\n';
+        };
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
