@@ -8,7 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  base: './', // CRITICAL for Capacitor blank screen fix
   server: {
-    host: true // Enable network access automatically
+    host: true
   }
 })
