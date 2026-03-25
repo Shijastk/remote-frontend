@@ -1,7 +1,26 @@
 import { io } from 'socket.io-client';
 
-const params = new URLSearchParams(window.location.search);
-const TOKEN = params.get('token') || 'remote123';
+// POLYFILL: Some older TVs don't support CustomEvent
+if (typeof window !== 'undefined' && typeof window.CustomEvent !== 'function') {
+  function CustomEvent(event, params) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+    return evt;
+  }
+  CustomEvent.prototype = window.Event.prototype;
+  window.CustomEvent = CustomEvent;
+}
+
+// POLYFILL: Robust URL extraction
+let TOKEN = 'remote123';
+try {
+  const query = window.location.search;
+  if (query) {
+    const params = new URLSearchParams(query);
+    TOKEN = params.get('token') || TOKEN;
+  }
+} catch (e) { console.warn('URLSearchParams fallback'); }
 
 // CLOUD RELAY (Set this in Vercel Environment Variables as VITE_RELAY_URL)
 const RELAY_URL = import.meta.env.VITE_RELAY_URL || 'http://localhost:3002'; 
