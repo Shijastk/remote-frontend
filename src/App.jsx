@@ -42,18 +42,59 @@ function ConnectionScreen({ onConnectPC, onEnterTVMode, onJoinTVCode }) {
             className="absolute inset-0 bg-emerald-500/20 rounded-3xl -z-10"
           />
         </div>
-        <h2 className="text-2xl font-bold tracking-tight">Privacy Remote SaaS</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-white uppercase tracking-widest">SaaS TV Remote</h2>
       </div>
 
       <div className="w-full max-w-[340px] space-y-6">
-        {/* PC Section */}
-        <div className="space-y-4 bg-white/[0.02] border border-white/5 p-6 rounded-3xl text-left">
-            <div className="flex items-center gap-3">
-                <Laptop size={18} className="text-emerald-500" />
-                <span className="text-xs font-bold uppercase tracking-widest opacity-40">Option 1: Control a PC</span>
+        {/* TV Section - HIGHLIGHTED for Native TV App */}
+        <div className="space-y-4 bg-blue-600/10 border border-blue-500/20 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-900/10 text-center animate-in zoom-in-95 duration-700">
+            <div className="flex flex-col items-center gap-4">
+                <div className="p-5 bg-blue-500/10 rounded-[2rem] border border-blue-500/20 text-blue-400">
+                    <Tv size={48} />
+                </div>
+                <div>
+                   <h3 className="text-xl font-bold text-white">Smart TV Mode</h3>
+                   <p className="text-blue-200/40 text-xs mt-1">Perfect for Android TV & Fire TV</p>
+                </div>
             </div>
-            <div className="bg-white/5 border border-white/5 rounded-2xl p-4 flex items-center gap-4 focus-within:border-emerald-500/30 transition-all">
-                <Wifi className="text-zinc-500" size={20} />
+            
+            <div className="grid grid-cols-1 gap-3 mt-4">
+                <button 
+                    onClick={onEnterTVMode}
+                    className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] active:scale-95 transition-all shadow-xl shadow-blue-500/40"
+                >
+                    I am On a TV
+                </button>
+                <div className="flex flex-col gap-2 mt-4">
+                   <div className="text-[10px] font-black uppercase text-zinc-600 tracking-widest">Or Control a TV Code</div>
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-4 flex items-center gap-2">
+                        <Smartphone size={16} className="opacity-20" />
+                        <input 
+                            type="number"
+                            placeholder="Enter 6-digit code"
+                            value={tvCode}
+                            onChange={(e) => setTvCode(e.target.value)}
+                            className="bg-transparent border-none outline-none w-full text-center font-mono font-bold text-xl placeholder:opacity-10"
+                        />
+                    </div>
+                    <button 
+                        onClick={() => onJoinTVCode(tvCode)}
+                        disabled={tvCode.length !== 6}
+                        className="w-full py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-[11px] uppercase tracking-widest active:scale-95 transition-all disabled:opacity-5"
+                    >
+                        Join TV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {/* PC Section - DE-EMPHASIZED */}
+        <div className="space-y-4 bg-white/[0.02] border border-white/5 p-6 rounded-3xl text-left opacity-40 hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-3">
+                <Laptop size={18} />
+                <span className="text-xs font-bold uppercase tracking-widest">Connect to a PC</span>
+            </div>
+            <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex items-center gap-4">
                 <input 
                     type="text"
                     placeholder="PC IP (e.g. 192.168.1.10)"
@@ -62,71 +103,75 @@ function ConnectionScreen({ onConnectPC, onEnterTVMode, onJoinTVCode }) {
                     className="bg-transparent border-none outline-none flex-1 text-sm font-mono"
                 />
             </div>
-            {error && <p className="text-[10px] text-rose-500 font-medium">Connection failed. Visit PC URL once to allow.</p>}
             <button 
                 onClick={() => onConnectPC(ip)}
                 disabled={!ip}
-                className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-20"
+                className="w-full py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold text-xs uppercase tracking-widest active:scale-95 transition-all disabled:opacity-20"
             >
-                Connect PC <ArrowRight size={18} />
+                Connect PC
             </button>
-        </div>
-
-        {/* TV Section */}
-        <div className="space-y-4 bg-blue-500/5 border border-blue-500/10 p-6 rounded-3xl text-left">
-            <div className="flex items-center gap-3">
-                <Tv size={18} className="text-blue-500" />
-                <span className="text-xs font-bold uppercase tracking-widest opacity-40 text-blue-400">Option 2: Control a TV</span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-                <button 
-                    onClick={onEnterTVMode}
-                    className="flex flex-col items-center justify-center p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl hover:bg-blue-500/20 transition-all active:scale-95"
-                >
-                    <Tv size={24} className="mb-2" />
-                    <span className="text-[10px] font-bold uppercase leading-tight">I am On a TV</span>
-                </button>
-                <div className="flex flex-col gap-2">
-                    <div className="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-3 flex items-center gap-2">
-                        <input 
-                            type="number"
-                            placeholder="Code"
-                            value={tvCode}
-                            onChange={(e) => setTvCode(e.target.value)}
-                            className="bg-transparent border-none outline-none w-full text-center font-mono font-bold text-lg placeholder:opacity-20"
-                        />
-                    </div>
-                    <button 
-                        onClick={() => onJoinTVCode(tvCode)}
-                        disabled={tvCode.length !== 6}
-                        className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-[10px] uppercase tracking-wider active:scale-95 transition-all disabled:opacity-20"
-                    >
-                        Join TV
-                    </button>
-                </div>
-            </div>
         </div>
       </div>
     </div>
   );
 }
 
+function TVController() {
+    const sendKey = (key) => emit('key:press', key);
+    
+    return (
+        <div className="flex flex-col items-center justify-center h-full p-8 select-none bg-neutral-950">
+            <div className="grid grid-cols-3 gap-6 mb-16 scale-110">
+                <div />
+                <button onClick={() => sendKey('up')} className="w-20 h-20 rounded-full bg-white/5 border border-white/5 flex items-center justify-center active:bg-blue-500 transition-all"><ChevronUp size={40}/></button>
+                <div />
+                <button onClick={() => sendKey('left')} className="w-20 h-20 rounded-full bg-white/5 border border-white/5 flex items-center justify-center active:bg-blue-500 transition-all"><ChevronLeft size={40}/></button>
+                <button onClick={() => sendKey('enter')} className="w-20 h-20 rounded-[2rem] bg-blue-600 text-white font-black active:scale-90 transform transition-all shadow-2xl shadow-blue-500/50">OK</button>
+                <button onClick={() => sendKey('right')} className="w-20 h-20 rounded-full bg-white/5 border border-white/5 flex items-center justify-center active:bg-blue-500 transition-all"><ChevronRight size={40}/></button>
+                <div />
+                <button onClick={() => sendKey('down')} className="w-20 h-20 rounded-full bg-white/5 border border-white/5 flex items-center justify-center active:bg-blue-500 transition-all"><ChevronDown size={40}/></button>
+                <div />
+            </div>
+
+            <div className="flex gap-12">
+                <button onClick={() => sendKey('backspace')} className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center active:scale-95 group">
+                    <CornerDownLeft size={28} className="opacity-40 group-active:opacity-100" />
+                </button>
+                <button onClick={() => sendKey('escape')} className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center active:scale-95 group">
+                    <RotateCcw size={26} className="opacity-40 group-active:opacity-100" />
+                </button>
+            </div>
+            
+            <div className="mt-20 text-[10px] uppercase tracking-[0.5em] font-black opacity-20 animate-pulse">Smart TV Remote Mode</div>
+        </div>
+    );
+}
+
 function TVReceiver({ code, onExit }) {
-    const [cursor, setCursor] = useState({ x: 50, y: 50 }); // in percentages
+    const [cursor, setCursor] = useState({ x: 50, y: 50 });
     const [lastAction, setLastAction] = useState('Waiting for Phone...');
-    const [elements, setElements] = useState([
-        { id: 1, label: 'YouTube', icon: '📺', x: 20, y: 30 },
-        { id: 2, label: 'Netflix', icon: '🎬', x: 40, y: 30 },
-        { id: 3, label: 'Spotify', icon: '🎵', x: 60, y: 30 },
-        { id: 4, label: 'Browser', icon: '🌐', x: 80, y: 30 },
-        { id: 5, label: 'Settings', icon: '⚙️', x: 20, y: 60 },
-        { id: 6, label: 'Photos', icon: '🖼️', x: 40, y: 60 },
-        { id: 7, label: 'Apps', icon: '📱', x: 60, y: 60 },
-        { id: 8, label: 'Power', icon: '🛑', x: 80, y: 60 },
-    ]);
+    const [focusedIndex, setFocusedIndex] = useState(0);
+    const elements = [
+        { id: 1, label: 'YouTube', icon: '📺' },
+        { id: 2, label: 'Netflix', icon: '🎬' },
+        { id: 3, label: 'Spotify', icon: '🎵' },
+        { id: 4, label: 'Browser', icon: '🌐' },
+        { id: 5, label: 'Settings', icon: '⚙️' },
+        { id: 6, label: 'Photos', icon: '🖼️' },
+        { id: 7, label: 'Apps', icon: '📱' },
+        { id: 8, label: 'Power', icon: '🛑' },
+    ];
 
     useEffect(() => {
+        const handleNativeTVKeys = (e) => {
+            if (e.key === 'ArrowUp') setFocusedIndex(p => Math.max(0, p - 4));
+            if (e.key === 'ArrowDown') setFocusedIndex(p => Math.min(elements.length - 1, p + 4));
+            if (e.key === 'ArrowLeft') setFocusedIndex(p => Math.max(0, p - 1));
+            if (e.key === 'ArrowRight') setFocusedIndex(p => Math.min(elements.length - 1, p + 1));
+            if (e.key === 'Enter') setLastAction(`Launching ${elements[focusedIndex].label}...`);
+            if (e.key === 'Backspace' || e.key === 'Escape') onExit();
+        };
+
         const onCommand = (e) => {
             const { event, data } = e.detail;
             
@@ -136,65 +181,66 @@ function TVReceiver({ code, onExit }) {
                     y: Math.max(0, Math.min(100, prev.y + (data.dy * 0.1)))
                 }));
             } else if (event === 'mouse:click') {
-                setLastAction('Click detected!');
+                setLastAction(`Click on ${elements[focusedIndex].label}!`);
             } else if (event === 'key:press') {
-               setLastAction(`Key: ${data}`);
+               handleNativeTVKeys({ key: data.charAt(0).toUpperCase() + data.slice(1) });
             }
         };
+
         window.addEventListener('relay:command', onCommand);
-        return () => window.removeEventListener('relay:command', onCommand);
-    }, []);
+        window.addEventListener('keydown', handleNativeTVKeys);
+        return () => {
+            window.removeEventListener('relay:command', onCommand);
+            window.removeEventListener('keydown', handleNativeTVKeys);
+        };
+    }, [focusedIndex]);
 
     return (
         <div className="flex flex-col h-full bg-neutral-950 text-white overflow-hidden relative font-sans">
-            {/* Background Grid */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #fff 1px, transparent 0)', backgroundSize: '40px 40px' }} />
             
-            {/* Header */}
-            <div className="p-12 flex justify-between items-end relative z-10">
-                <div className="space-y-2">
-                    <h2 className="text-6xl font-black tracking-tighter text-blue-500 uppercase">Smart Remote OS</h2>
-                    <p className="text-2xl text-zinc-500 font-medium">Cloud SaaS Receiver • {lastAction}</p>
+            <div className="p-16 flex justify-between items-end relative z-10 w-full">
+                <div className="space-y-4">
+                    <h2 className="text-7xl font-black tracking-tighter text-blue-500 uppercase leading-none">TV REMOTE OS</h2>
+                    <p className="text-3xl font-medium text-white/40 italic">{lastAction}</p>
                 </div>
-                <div className="bg-white/5 border border-white/5 p-8 rounded-[2rem] text-center">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 mb-2">Pairing Code</div>
-                    <div className="text-6xl font-mono font-black text-emerald-500 tracking-tighter">{code}</div>
+                <div className="bg-white/5 border border-white/5 p-12 rounded-[3.5rem] text-center shadow-2xl">
+                    <div className="text-xs font-black uppercase tracking-[0.5em] opacity-40 mb-6 underline decoration-blue-500 decoration-4 underline-offset-8">Pairing Code</div>
+                    <div className="text-[10rem] leading-none font-mono font-black text-emerald-500 tracking-tighter shadow-emerald-500/20 drop-shadow-2xl">{code}</div>
                 </div>
             </div>
 
-            {/* Application Grid */}
-            <div className="flex-1 px-12 pb-12 relative z-10">
-                <div className="grid grid-cols-4 gap-8 h-full">
-                    {elements.map(item => (
+            <div className="flex-1 px-16 pb-16 relative z-10">
+                <div className="grid grid-cols-4 gap-12 h-full">
+                    {elements.map((item, index) => (
                         <motion.div 
                             key={item.id}
-                            whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                            className="bg-white/5 border border-white/5 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 p-8 transition-colors group"
+                            animate={{ 
+                                scale: (focusedIndex === index || (Math.abs(cursor.x - (25 * (index%4) + 12.5)) < 10 && Math.abs(cursor.y - (index < 4 ? 30 : 60)) < 15)) ? 1.05 : 1,
+                                backgroundColor: focusedIndex === index ? 'rgba(59, 130, 246, 0.4)' : 'rgba(255, 255, 255, 0.05)',
+                                borderColor: focusedIndex === index ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.05)'
+                            }}
+                            className="border rounded-[3rem] flex flex-col items-center justify-center gap-8 p-12 transition-all relative overflow-hidden"
                         >
-                            <span className="text-8xl group-hover:scale-110 transition-transform">{item.icon}</span>
-                            <span className="text-2xl font-bold tracking-tight opacity-60 group-hover:opacity-100">{item.label}</span>
+                            <span className="text-[10rem]">{item.icon}</span>
+                            <span className="text-3xl font-black tracking-tight uppercase opacity-80">{item.label}</span>
+                            {focusedIndex === index && (
+                                <motion.div layoutId="focus-ring" className="absolute inset-0 border-4 border-blue-500/50 rounded-[3rem] -m-1" />
+                            )}
                         </motion.div>
                     ))}
                 </div>
             </div>
 
-            {/* Virtual Cursor */}
             <motion.div 
                 animate={{ x: `${cursor.x}vw`, y: `${cursor.y}vh` }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999]"
+                transition={{ type: "spring", damping: 30, stiffness: 250 }}
+                className="fixed top-0 left-0 w-12 h-12 pointer-events-none z-[9999]"
             >
-                <div className="relative">
-                    <MousePointer2 size={32} className="text-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)] fill-blue-500" />
-                    <motion.div 
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                        className="absolute inset-0 bg-blue-400 rounded-full blur-xl -z-10"
-                    />
-                </div>
+                <MousePointer2 size={48} className="text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] fill-blue-500" />
             </motion.div>
 
-            <button onClick={onExit} className="absolute bottom-8 right-8 text-zinc-800 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">Exit Receiver</button>
+            <button onClick={onExit} className="absolute bottom-12 left-12 opacity-10 hover:opacity-100 transition-opacity uppercase font-black tracking-[0.3em] text-[10px]">Exit OS</button>
         </div>
     );
 }
@@ -274,7 +320,8 @@ export default function App() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="h-full w-full"
             >
-              {activeTab === 'mouse' && <Trackpad />}
+              {activeTab === 'mouse' && !isTV && <Trackpad />}
+              {activeTab === 'mouse' && isTV && <TVController />}
               {activeTab === 'media' && <MediaControls spotifyTrack={spotifyTrack} />}
               {activeTab === 'keyboard' && <Keyboard />}
               {activeTab === 'screen' && !isTV && <ScreenViewer />}
