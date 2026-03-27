@@ -28,7 +28,7 @@ try {
 } catch (e) { console.warn('URLSearchParams fallback'); }
 
 // CLOUD RELAY (Set this in Vercel Environment Variables as VITE_RELAY_URL)
-const RELAY_URL = import.meta.env.VITE_RELAY_URL || `http://${window.location.hostname}:3002`; 
+const RELAY_URL = import.meta.env.VITE_RELAY_URL || 'https://remote-relay-nbcl.onrender.com'; 
 
 export let socket = null;
 let currentConnectionId = null;
