@@ -178,7 +178,7 @@ function ConnectionScreen({ onConnectPC, onEnterTVMode, onJoinTVCode, pcStatus }
                             </div>
                             <div className="relative p-2 bg-neutral-100 rounded-xl">
                                 <img 
-                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`http://${pcStatus.ip}:5173?ip=${pcStatus.ip}&token=${pcStatus.token}`)}&bgcolor=fff&color=000&margin=10`}
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`${window.location.origin}?ip=${pcStatus.ip}&token=${pcStatus.token}`)}&bgcolor=fff&color=000&margin=10`}
                                     alt="Pairing QR"
                                     className="w-32 h-32 mix-blend-multiply"
                                 />
