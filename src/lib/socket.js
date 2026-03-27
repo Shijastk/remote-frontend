@@ -24,6 +24,7 @@ try {
     TOKEN = params.get('token') || TOKEN;
     AUTO_IP = params.get('ip');
     AUTO_CODE = params.get('code');
+    window.AUTO_MODE = params.get('mode');
   }
 } catch (e) { console.warn('URLSearchParams fallback'); }
 
@@ -52,7 +53,10 @@ export const joinCloudRoom = (code, isReceiver = false) => {
     currentConnectionId = code;
     
     socket = io(RELAY_URL, {
-        transports: ['websocket']
+        transports: ['polling', 'websocket'], // Allow polling fallback for Render
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionAttempts: Infinity
     });
 
     socket.on('connect', () => {
@@ -62,6 +66,7 @@ export const joinCloudRoom = (code, isReceiver = false) => {
         } else {
             socket.emit('controller:join', { connectionId: code });
         }
+        window.dispatchEvent(new CustomEvent('relay:connected'));
     });
 
     setupListeners(socket);
@@ -83,13 +88,16 @@ const setupListeners = (s) => {
 };
 
 export const emit = (event, data) => {
-    if (!socket || !socket.connected) return;
+    if (!socket || !socket.connected) {
+        console.warn('⚠️ Cannot emit: Socket not connected');
+        return;
+    }
 
     if (currentConnectionId) {
-        // We are in Cloud Mode
+        console.log(`☁️ Cloud Emit [${currentConnectionId}]: ${event}`);
         socket.emit('relay', { connectionId: currentConnectionId, event, data });
     } else {
-        // We are in Local Mode
+        console.log(`📍 Local Emit: ${event}`);
         socket.emit(event, data);
     }
 };

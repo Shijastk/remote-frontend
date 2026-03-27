@@ -178,7 +178,7 @@ function ConnectionScreen({ onConnectPC, onEnterTVMode, onJoinTVCode, pcStatus }
                             </div>
                             <div className="relative p-2 bg-neutral-100 rounded-xl">
                                 <img 
-                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`${window.location.origin}?ip=${pcStatus?.ip || ip}&token=${pcStatus?.token || 'remote123'}`)}&bgcolor=fff&color=000&margin=10`}
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(`https://remote-controll.vercel.app?code=${pcStatus?.connectionId || '376111'}&mode=pc`)}&bgcolor=fff&color=000&margin=10`}
                                     alt="Pairing QR"
                                     className="w-32 h-32 mix-blend-multiply"
                                 />
@@ -392,6 +392,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('mouse');
   const [tvCode, setTvCode] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [isCloudConnected, setIsCloudConnected] = useState(false);
   const [spotifyTrack, setSpotifyTrack] = useState(null);
   const [pcStatus, setPcStatus] = useState(null);
 
@@ -405,11 +406,15 @@ export default function App() {
 
   useEffect(() => {
     const onConnect = () => setIsConnected(true);
+    const onCloudConnect = () => setIsCloudConnected(true);
     const onSpotifyTrack = (data) => setSpotifyTrack(data.track);
+    
     window.addEventListener('socket:connected', onConnect);
+    window.addEventListener('relay:connected', onCloudConnect);
     window.addEventListener('spotify:track', (e) => onSpotifyTrack(e.detail));
     return () => {
         window.removeEventListener('socket:connected', onConnect);
+        window.removeEventListener('relay:connected', onCloudConnect);
     };
   }, []);
 
@@ -437,9 +442,15 @@ export default function App() {
         console.log('🚀 Auto-connecting to IP:', AUTO_IP);
         handleConnectPC(AUTO_IP);
     } else if (AUTO_CODE) {
-        setTvCode(AUTO_CODE); // Ensure UI knows the code
-        console.log('🚀 Auto-joining Room:', AUTO_CODE);
-        handleJoinTVCode(AUTO_CODE);
+        setTvCode(AUTO_CODE);
+        const mode = window.AUTO_MODE || 'tv';
+        console.log(`🚀 Auto-joining ${mode.toUpperCase()} Room:`, AUTO_CODE);
+        if (mode === 'pc') {
+          setAppMode('pc');
+          joinCloudRoom(AUTO_CODE, false);
+        } else {
+          handleJoinTVCode(AUTO_CODE);
+        }
     }
   }, []);
 
@@ -457,7 +468,7 @@ export default function App() {
             onClick={() => setAppMode('home')}
             className={cn(
               "w-2.5 h-2.5 rounded-full transition-all",
-              isConnected ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : "bg-rose-500"
+              isConnected || isCloudConnected ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : "bg-rose-500"
             )} 
           />
           <h1 className="text-xs font-bold tracking-tight opacity-40 uppercase flex items-center gap-2">
