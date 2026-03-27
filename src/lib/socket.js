@@ -14,16 +14,21 @@ if (typeof window !== 'undefined' && typeof window.CustomEvent !== 'function') {
 
 // POLYFILL: Robust URL extraction
 let TOKEN = 'remote123';
+export let AUTO_IP = null;
+export let AUTO_CODE = null;
+
 try {
   const query = window.location.search;
   if (query) {
     const params = new URLSearchParams(query);
     TOKEN = params.get('token') || TOKEN;
+    AUTO_IP = params.get('ip');
+    AUTO_CODE = params.get('code');
   }
 } catch (e) { console.warn('URLSearchParams fallback'); }
 
 // CLOUD RELAY (Set this in Vercel Environment Variables as VITE_RELAY_URL)
-const RELAY_URL = import.meta.env.VITE_RELAY_URL || 'http://localhost:3002'; 
+const RELAY_URL = import.meta.env.VITE_RELAY_URL || `http://${window.location.hostname}:3002`; 
 
 export let socket = null;
 let currentConnectionId = null;
@@ -31,6 +36,7 @@ let currentConnectionId = null;
 // Mode A: Direct Local (PC)
 export const connectToLocalIp = (ip) => {
     if (socket) socket.disconnect();
+    currentConnectionId = null; // Important! Clear cloud mode
     localStorage.setItem('pc-remote-last-ip', ip);
     
     socket = io(`http://${ip}:3001`, {
