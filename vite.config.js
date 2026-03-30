@@ -9,26 +9,21 @@ export default defineConfig({
     react(),
     tailwindcss(),
     legacy({
-      targets: ['defaults', 'not IE 11', 'Chrome 50', 'Safari 10', 'Samsung 6.2'],
-      modernTargets: ['chrome 60', 'safari 10', 'edge 15'],
-      polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from'],
+      targets: ['defaults', 'not IE 11', 'Chrome 52'], // Explicitly targeting Chrome 52
+      modernTargets: ['chrome 60'],
+      polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from', 'es.promise.finally'],
       modernPolyfills: true,
       renderLegacyChunks: true
     })
-
   ],
   build: {
-    target: ['chrome50', 'es2015'],
+    target: 'es2015',
     minify: 'terser',
-    modulePreload: false, // CRITICAL: Stop using modern preloading which uses import.meta/import.meta.resolve
+    modulePreload: false, // CRITICAL: Stop using modern preloading which uses import.meta.resolve
     cssTarget: 'chrome50',
     terserOptions: {
       compress: {
         defaults: true,
-        drop_console: false,
-      },
-      format: {
-        comments: false,
       },
       safari10: true,
     }
@@ -38,5 +33,3 @@ export default defineConfig({
     host: true
   }
 })
-
-
