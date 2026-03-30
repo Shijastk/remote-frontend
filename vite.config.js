@@ -9,12 +9,13 @@ export default defineConfig({
     react(),
     tailwindcss(),
     legacy({
-      targets: ['defaults', 'not IE 11', 'Chrome 52'], // Explicitly targeting Chrome 52
-      modernTargets: ['chrome 60'],
-      polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from', 'es.promise.finally'],
+      targets: ['defaults', 'not IE 11', 'Chrome 50'], // Extreme target
+      modernTargets: ['chrome 50'], // Force the module version to also be very simple
+      polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from', 'es.promise.finally', 'es.set'],
       modernPolyfills: true,
       renderLegacyChunks: true
     })
+
   ],
   build: {
     target: 'es2015',
