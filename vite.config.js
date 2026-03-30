@@ -9,11 +9,32 @@ export default defineConfig({
     react(),
     tailwindcss(),
     legacy({
-      targets: ['defaults', 'not IE 11', 'Chrome 60']
+      targets: ['defaults', 'not IE 11', 'Chrome 50', 'Safari 10', 'Samsung 6.2'],
+      polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from'],
+      modernPolyfills: true,
+      renderLegacyChunks: true
     })
   ],
-  base: './', // CRITICAL for Capacitor blank screen fix
+  build: {
+    target: ['chrome50', 'es2015'],
+    minify: 'terser',
+    modulePreload: false, // CRITICAL: Stop using modern preloading which uses import.meta/import.meta.resolve
+    cssTarget: 'chrome50',
+    terserOptions: {
+      compress: {
+        defaults: true,
+        drop_console: false,
+      },
+      format: {
+        comments: false,
+      },
+      safari10: true,
+    }
+  },
+  base: './', // CRITICAL for Capacitor/Old TVs blank screen fix
   server: {
     host: true
   }
 })
+
+
