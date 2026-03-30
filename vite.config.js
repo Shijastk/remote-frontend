@@ -10,10 +10,12 @@ export default defineConfig({
     tailwindcss(),
     legacy({
       targets: ['defaults', 'not IE 11', 'Chrome 50', 'Safari 10', 'Samsung 6.2'],
+      modernTargets: ['chrome 60', 'safari 10', 'edge 15'],
       polyfills: ['es.promise', 'es.array.iterator', 'es.object.assign', 'es.symbol', 'es.array.from'],
       modernPolyfills: true,
       renderLegacyChunks: true
     })
+
   ],
   build: {
     target: ['chrome50', 'es2015'],
